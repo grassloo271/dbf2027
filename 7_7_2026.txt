@@ -1,0 +1,23 @@
+========================================
+       Grass'S GLIDER DESIGN METRICS     
+========================================
+Optimization Status : Solve_Succeeded
+Total Glider Mass   : 32.28 grams
+Design Velocity     : 5.00 m/s
+----------------------------------------
+Main Wing Area (S)  : 0.0298 m^2
+Aspect Ratio (AR)   : 6.61
+Total Wingspan (b)  : 0.44 m
+Wing Chord (c)      : 67.1 mm
+Wing Dihedral       : 15.0 degrees
+Wing Twist          : 10.0 degrees
+----------------------------------------
+Horizontal Tail Area: 0.0060 m^2
+Vertical Tail Area  : 0.0010 m^2
+Horizontal Tail AR: 23.0729 m^2
+Vertical Tail AR: 5.6502 m^2
+Tail Boom Length    : 0.10 m
+----------------------------------------
+Aerodynamic Lift    : 0.317 N
+Required Weight Lift: 0.317 N
+Operating CL        : 0.671
