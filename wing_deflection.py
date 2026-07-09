@@ -34,7 +34,7 @@ def asb_backward_cumulative_trapezoid(y, x):
     
     return np.concatenate([np.array([total_sum]), total_sum - forward_cumsum])
 
-def max_deflection(L, AR, S, E, I_formula=None, lam=1.0, tau=0.1, num_pts=20):
+def max_deflection(L, AR, S, E, I_formula=None, rho = 0,  lam=1.0, tau=0.1, num_pts=20):
     b = np.sqrt(S * AR)  # Total wingspan (m)
     c_mean = S / b       # Mean chord (m)
     
@@ -51,14 +51,19 @@ def max_deflection(L, AR, S, E, I_formula=None, lam=1.0, tau=0.1, num_pts=20):
     # Note: Keep the discretization grid strictly numeric (don't optimize num_pts!)
     x = np.linspace(0, b / 2, num_pts)
 
-    ellipse_b = L * 2 / (np.pi * b)
+    ellipse_b = L * 4 / (np.pi * b)
     eps = 1e-12
-    q_ellipse = ellipse_b * np.sqrt(np.maximum(1 - (x / (b / 2)) ** 2, eps))
-
+    q_ellipse = ellipse_b * np.sqrt(np.maximum(1 - (x / (b / 2)) ** 2, eps)) 
+    
     loading_per = L / S
-    q_chord = loading_per * c_root * (1 - (1 - lam) * (x / (b / 2)))
+    q_chord = loading_per * c_root * (1 - (1 - lam) * (x / (b / 2))) 
 
-    q_schrenk = (q_ellipse + q_chord) / 2
+    q_weight = - (c_root * (1 - (1 - lam) * (x / (b / 2)))) ** 2  * rho * 9.81 * tau 
+
+    q_schrenk = (q_ellipse + q_chord) / 2 
+
+    #including the weight of the wing
+    q_schrenk = q_schrenk + q_weight
     EI = E * (I_root - (I_root - I_tip) * (x / (b / 2)))
 
     # --- Structural Integrations ---
@@ -76,3 +81,12 @@ def max_deflection(L, AR, S, E, I_formula=None, lam=1.0, tau=0.1, num_pts=20):
     deflection = asb_forward_cumulative_trapezoid(slope, x)
 
     return deflection[-1]
+
+if __name__ == "__main__":
+    L = 1
+    AR = 2
+    S = 0.06 * 0.12
+    E = 3e9
+    I_formula = lambda c, tau: c * 0.00025 ** 3 / 12
+    rho = 250
+    print(max_deflection(L, AR, S, E, I_formula = I_formula, rho = rho, tau = 0.00025 / 0.06))
